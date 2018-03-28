@@ -1,0 +1,30 @@
+name: ZenPacks.cascadeo.Waqi
+
+zProperties:
+    zWaqiToken:
+        category: World Air Quality Index
+
+    zWaqiLocations:
+        type: lines
+        category: World Air Quality Index
+classes:
+    WaqiDevice:
+        base: [zenpacklib.Device]
+        label: World Air Quality Index Device
+    WaqiStation:
+        base: [zenpacklib.Component]
+        label: World Air Quality Index Station
+        properties: 
+            url:
+                label: URL 
+
+class_relationships:
+  - WaqiDevice 1:MC WaqiStation
+
+device_classes:
+    /WAQI:
+        zProperties: 
+            zPythonClass: ZenPacks.cascadeo.Waqi.WaqiDevice
+            zSnmpMonitorIgnore: true
+            zPingMonitorIgnore: true
+            zCollectorPlugin: Waqi.Locations
