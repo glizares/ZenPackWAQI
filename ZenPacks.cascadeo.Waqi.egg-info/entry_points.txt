@@ -1,0 +1,3 @@
+[zenoss.zenpacks]
+ZenPacks.cascadeo.Waqi = ZenPacks.cascadeo.Waqi
+

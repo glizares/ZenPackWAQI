@@ -1,0 +1,58 @@
+name: ZenPacks.cascadeo.Waqi
+
+zProperties:
+    zWaqiToken:
+        category: World Air Quality Index
+
+    zWaqiLocations:
+        type: lines
+        category: World Air Quality Index
+classes:
+    WaqiDevice:
+        base: [zenpacklib.Device]
+        label: World Air Quality Index Device
+    WaqiStation:
+        base: [zenpacklib.Component]
+        label: Location
+        properties: 
+            url:
+                label: URL 
+
+class_relationships:
+  - WaqiDevice 1:MC WaqiStation
+
+device_classes:
+    /WAQI:
+        zProperties: 
+            zPythonClass: ZenPacks.cascadeo.Waqi.WaqiDevice
+            zSnmpMonitorIgnore: true
+            zPingMonitorIgnore: true
+            zCollectorPlugins: 
+                - Waqi.Locations
+        templates:
+            Location:
+                description: Station air quality index monitoring
+                targetPythonClass: ZenPacks.cascadeo.Waqi.WaqiStation
+
+                datasources:
+                    alerts:
+                        type: Python
+                        plugin_classname: ZenPacks.cascadeo.Waqi.dsplugins.Alerts
+                        cycletime: "600"
+                        datapoints:
+                            aqi: GAUGE
+
+                graphs:
+                    Air Quality Index:
+                        miny: 0
+                        graphpoints:
+                            AQI:
+                                dpName: alerts_aqi
+                                format: "%4.0lf"
+                thresholds:
+                    Pollution Level:
+                        dsnames: [alerts_aqi]
+                        eventClass: /Environ
+                        severity: Warning
+                        type: MinMaxThreshold
+                        maxval: 150
